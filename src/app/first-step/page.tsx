@@ -2,13 +2,15 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 export default function FirstStep() {
 	const [firstName, setFistName] = React.useState("");
 	const [visible, setVisible] = React.useState(false);
+	const route = useRouter();
 
-	const name = "joana";
+	const name = "joan";
 
 	React.useEffect(() => {
 		if (firstName == "") {
@@ -19,7 +21,12 @@ export default function FirstStep() {
 	}, [firstName]);
 
 	const handleClick = () => {
-		if (firstName != name.toLowerCase()) {
+		if (firstName.toLowerCase() != name.toLowerCase()) {
+			alert(
+				"You are not allowed here!, or make sure your first name is correct"
+			);
+		} else {
+			route.push("/second-step");
 		}
 	};
 
