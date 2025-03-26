@@ -1,24 +1,15 @@
 "use client";
 
-import * as animationData from "@/confetti/confetti.json";
-import Lottie from "lottie-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React from "react";
+import Heart from "../app/assets/icon/heart.png";
 
 export default function Home() {
 	const [count, setCount] = React.useState(0);
 	const intervalRef = React.useRef<NodeJS.Timeout | null>(null);
-	const [redirect, setRedirect] = React.useState(false);
+	const [loading, setLoading] = React.useState(false);
 	const route = useRouter();
-
-	const defaultOptions = {
-		loop: redirect,
-		autoplay: redirect,
-		animationData: animationData,
-		rendererSettings: {
-			preserveAspectRatio: "xMidYMid slice",
-		},
-	};
 
 	const startCounting = () => {
 		if (!intervalRef.current) {
@@ -40,13 +31,13 @@ export default function Home() {
 	const size = value + 100;
 
 	React.useEffect(() => {
-		if (size === 200) {
-			setRedirect(true);
+		if (count === 10) {
+			setLoading(true);
 			setTimeout(() => {
 				route.push("/first-step");
 			}, 3000);
 		}
-	}, [size, route]);
+	}, [count, route]);
 
 	const stopCounting = () => {
 		if (intervalRef.current) {
@@ -56,18 +47,10 @@ export default function Home() {
 	};
 	return (
 		<div className="flex flex-col items-center bg-pink-300 justify-center min-h-screen p-8 pb-20 gap-8 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-			<h1 className="font-bold text-pink-500">Hold me to continue!</h1>
-			<div className="absolute">
-				<Lottie
-					loop={defaultOptions.loop}
-					autoplay={defaultOptions.autoplay}
-					animationData={defaultOptions.animationData}
-					rendererSettings={defaultOptions.rendererSettings}
-					height={200}
-					width={400}
-				/>
-			</div>
-			<div className="rounded-full relative w-[200px] h-[200px] border-2 border-pink-500 shadow-2xl shadow-pink-500 flex items-center justify-center">
+			<h1 className="font-bold text-pink-500 text-center">
+				Hold me to continue!
+			</h1>
+			<div className="rounded-full w-[200px] h-[200px] border-2 border-pink-500 shadow-2xl shadow-pink-500 flex items-center justify-center">
 				<button
 					onMouseDown={startCounting}
 					onMouseUp={stopCounting}
@@ -79,9 +62,17 @@ export default function Home() {
 						height: `${size}px`,
 						fontSize: `${size / 10}px`,
 					}}
-					className="p-4 bg-pink-500 z-50 rounded-full flex items-center justify-center shadow-2xl hover:cursor-pointer text-white"
+					className="p-4 bg-pink-500 rounded-full flex items-center justify-center shadow-2xl hover:cursor-pointer text-white"
 				>
-					<span>Hold Me</span>
+					{loading ? (
+						<Image
+							alt="heart"
+							src={Heart}
+							className="w-28 h-28 animate-pulse"
+						/>
+					) : (
+						<span>Hold Me</span>
+					)}
 				</button>
 			</div>
 		</div>
